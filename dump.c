@@ -34,7 +34,7 @@ void reverse(char *s)
 }
 
 
-/* checks whether the inputed string is valid or not */
+/* checks whether the input string is valid or not */
 int isvalid (int c, int base)
 {
 	char *cond;
@@ -58,7 +58,7 @@ int isvalid (int c, int base)
 	return 1;
 }
 
-
+/* prepare the number in s in a fancy way and put it in t */
 void prepnum (char *s, char *t, int obase)
 {
 	int bitgrp, i, l;
@@ -93,7 +93,6 @@ void prepnum (char *s, char *t, int obase)
 
 
 /* char string s to numeral of base */
-
 long long chartoint (char *s, int base)
 {
 	long long d = 0;
@@ -107,7 +106,6 @@ long long chartoint (char *s, int base)
 }
 
 /* convert character into integers */
-
 int atobase (int c, int base)
 {
 	int i;
@@ -119,7 +117,6 @@ int atobase (int c, int base)
 }
 
 /* intobase: int n is converted into the the numeral system defined by base and put into buffer */
-
 void intobase (long long n, int base, char *buffer)
 {
 	char *p;
@@ -131,6 +128,8 @@ void intobase (long long n, int base, char *buffer)
 	*buffer = '\0';
 	reverse (p);
 }
+
+
 int main (int argc, char *argv[])
 {
 	int c, aflag, fflag, cond, ibase, obase;
@@ -139,8 +138,11 @@ int main (int argc, char *argv[])
 	long long idata = 0;
 	aflag = fflag = 0;
 
+	/* determine the base of input number and output number  */
 	for (cp = *++argv; *cp; *cp++) {
 		switch(*cp) {
+			case '-':
+				break;
 			case 'b':
 				ibase = 2;
 				switch(*++cp) {
@@ -229,26 +231,30 @@ int main (int argc, char *argv[])
 				aflag++;
 				istr = *++argv;
 				break;
+			default:
+				printf("dump: ");
 		}
 	}
 
-	if (aflag) {
+	if (aflag) {	/* the next argument is the input number */
 		idata = chartoint (istr, ibase);
 		if (ibase == 10) {
-			if (obase) {
+			if (obase) {	/* if output base is defined only return the number on the defined base */
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("%s: %s\n", numnm, prpbuf);
-			} else {
-				obase = 2;
+			} else {	/* else return the number on all possible bases */
+				obase = 2;	/* binary */
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("bin: %s\n", prpbuf);
-				obase = 8;
+
+				obase = 8;	/* octal */
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("oct: %s\n", prpbuf);
-				obase = 16;
+
+				obase = 16;	/* hexadecimal */
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("hex: %s\n", prpbuf);
@@ -263,10 +269,12 @@ int main (int argc, char *argv[])
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("oct: %s\n", prpbuf);
-				obase = 10;
+
+				obase = 10;	/* decimal */
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("int: %s\n", prpbuf);
+
 				obase = 16;
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
@@ -282,10 +290,12 @@ int main (int argc, char *argv[])
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("bin: %s\n", prpbuf);
+
 				obase = 10;
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("int: %s\n", prpbuf);
+
 				obase = 16;
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
@@ -301,17 +311,19 @@ int main (int argc, char *argv[])
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("bin: %s\n", prpbuf);
+
 				obase = 8;
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("oct: %s\n", prpbuf);
+
 				obase = 10;
 				intobase (idata, obase, buf);
 				prepnum (buf, prpbuf, obase);
 				printf ("int: %s\n", prpbuf);
 			}
 		} 
-	} else if (fflag) {
+	} else if (fflag) {	/* the next argument is a file containing input number */
 		fp = fopen (istr, "r");
 		if (fp != NULL) {
 			if (ibase == 10) {
@@ -336,7 +348,7 @@ int main (int argc, char *argv[])
 				}
 			}
 		} else {
-			printf ("unable to open file %s", istr);
+			printf ("dump: unable to open file %s", istr);
 		}
 	}
 }

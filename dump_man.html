@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>dump</title>
+<style>
+:root {
+  font-size: 16px;
+  font-family: Arial;
+  line-height: 1.5;
+}
+._sub {
+    margin-left: 2rem;
+}
+body {
+  margin: 2rem;
+}
+p {
+  font-size: 1.2rem;
+}
+.heading {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+
+<p class="heading">NAME</p>
+
+	<div class="_sub">
+		<p>dump -- convert between integers, binary, hexadecimals and octals</p>
+	</div>
+
+<p class="heading">SYNOPISIS</p>
+
+	<div class="_sub">
+		<p><b>dump</b> -key [input]</p>
+	</div>
+
+<p class="heading">DESCRIPTION</p>
+	<div class="_sub">
+
+		<p>
+			<i>dump</i> takes an number as input and print the number in the specified numeral system.
+			The key is a string contains at most one function letter defining the immediate next argument
+			plus letters that defines the base of input and output number.
+			Other arguments to the command are either input or a file containing the input.
+		</p>
+	
+		<p>The function letter is one of the following letters:</p>
+	
+		<div class="_sub">
+			<p><b>a</b>	<span class="_sub">the next argument is treated as the input</span></p>
+			<p><b>f</b>	<span class="_sub">the next argument is treated as the path of a file that contains the input</span></p>
+		</div>
+
+		<p>The following letters represent different base:</p>
+	
+		<div class="_sub">
+			<p><b>b</b>	<span class="_sub">binary</span></p>
+			<p><b>i</b>	<span class="_sub">integers</span></p>
+			<p><b>h</b>	<span class="_sub">hexadecimals</span></p>
+			<p><b>o</b>	<span class="_sub">octals</span></p>
+		</div>
+	
+		<p><b>a</b> and <b>f</b> can not be used simultaneously.
+			In the same way none of the letters representing the base can not be repeted.
+		</p>
+	
+	</div>
+<p class="heading">EXAMPLES</p>
+	<div class="_sub">
+		<p>dump aib 512</p>
+		<div class="_sub">
+			<p>here,</p>
+			<p><b>a</b> <span class="_sub">tells that 512 is the input</span></p>
+			<p><b>i</b> <span class="_sub">tells that it is in integer base</span></p>
+			<p><b>b</b> <span class="_sub">tells that it must be converted to binary</span></p>
+		</div>
+
+		<p>dump fib dump.c.</p>
+		<div class="_sub">
+			<p>here,</p>
+			<p><b>f</b> <span class="_sub">tells that dump.c is a file containing the input</span></p>
+			<p><b>i</b> <span class="_sub">tells that each character of the file is in integer base</span></p>
+			<p><b>b</b> <span class="_sub">tells that each character of the file must be converted to binary</span></p>
+		</div>
+		<p>to get the binary, hexadecimal and octal representation of an ASCII character just type ai in the <i>key</i> string. As ASCII characters are all valid integers in the range 0 to 256 so their binary, hexadecimal and octal representation is the same as that of the integers in that range.</p>
+
+	</div>
+<p class="heading">BUGS</p>
+	<div class="_sub">
+		<p>Inputing invalid number will print error following the input character. Characters to distinguish different base are invalid, <i>dump</i> will ignore them.</p>
+	</div>
+</body>
+</html>
