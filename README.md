@@ -2,58 +2,71 @@
  
 ## NAME
 
-dump -- convert between integers, binary, hexadecimals and octals
+`dump` -- convert between different numbers
 
 ## SYNOPISIS
 
-dump -key [input]
+`dump -[bihov] -[nf] input -[l] length`
 
 ## DESCRIPTION
 
-dump takes an number as input and print the number in the specified numeral system. The *key* is a string contains at most one function letter defining the immediate next argument plus letters that defines the base of input and output number. Other arguments to the command are either input or a file containing the input.
+`dumps` file or argument in different numeral system as defined by the first argument. The function letters defines:
 
-The function letter is one of the following letters:
+**`b`** binary
 
-> **a** the next argument is treated as the input
+**`i`** integers
 
-> **f** the next argument is treated as the path of a file that contains the input
+**`h`** hexadecimals
 
-The following letters represent different base:
+**`o`** octals
 
-> **b** binary
+**`n`** the argument immediatly after is treated as the input.
 
-> **i** integers
+**`f`** the argument immediatly after is treated as the path of a file that contains the input.
 
-> **h** hexadecimals
+**`l`** the argument immediatly after is the length of number per line (files only).
 
-> **o** octals
+**`v`** Normally `dump` does its work silently. The **`v`** (verbose) option cause it to prints details about the output.
 
-**a** and **f** can not be used simultaneously. In the same way none of the letters representing the base can not be repeted.
+
+In the letter(s) defining the base first letter is treated as the input base and if the letter immediatly after that defines a base then it is treated as the output base. If output base is not defined in case of numbers it prints the number in all the other basis, in case of file binary is choosen.
+
+**`n`** and **`f`** should not be used simultaneously. If used only the action of **`n`** will be done. In the same way none of the letters representing the base can not be repeted.
 
 ## EXAMPLES
 
-dump aib 512
+> `dump -ib -n 512`
 
 here,
 
-> **a** tells that 512 is the input
+**`a`** tells that 512 is the input number.
 
-> **i** tells that it is in integer base
+**`i`** tells that the number is in integer base.
 
-> **b** tells that it must be converted to binary
+**`b`** tells that the number must be converted to binary.
 
-> dump fib dump.c.
+> `dump -ibv -f dump.c`
 
 here,
 
-> f tells that dump.c is a file containing the input
+**`f`** tells that dump.c is a file containing the input.
 
-> i tells that each character of the file is in integer base
+**`i`** tells that each character of the file is in integer base.
 
-> b tells that each character of the file must be converted to binary
+**`b`** tells that each character of the file must be converted to binary.
 
-to get the binary, hexadecimal and octal representation of an ASCII character just type ai in the *key* string. As ASCII characters are all valid integers in the range 0 to 256 so their binary, hexadecimal and octal representation is the same as that of the integers in that range.
+**`v`** tells that more details must be printed about the output.
+
+To get the dump of a file containing of an ASCII or Unicode character just type in **`i`** as the input base. As ASCII or Unicode characters are all valid integers so their binary, hexadecimal and octal representation is the same as that of the integers.
+
+## FILES
+
+`./dump.c`
+
+## DIAGNOSTICS
+
+Complaints about bad key characters and input number. Complaints if unable to open file.
 
 ## BUGS
 
-Inputing invalid number will print error following the input character. Characters to distinguish different base are invalid, dump will ignore them.
+There's no way to read the characters from a file, in base other than integers.
