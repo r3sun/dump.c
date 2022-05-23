@@ -12,21 +12,21 @@
 
 `dumps` file or argument in different numeral system as defined by the first argument. The function letters defines:
 
-> `**b**` binary
+> **`b`** binary
 
-`**i**` integers
+**`i`** integers
 
-`**h**` hexadecimals
+**`h`** hexadecimals
 
-`**o**` octals
+**`o`** octals
 
-`**n**` the argument immediatly after is treated as the input.
+**`n`** the argument immediatly after is treated as the input.
 
-`**f**` the argument immediatly after is treated as the path of a file that contains the input.
+**`f`** the argument immediatly after is treated as the path of a file that contains the input.
 
-`**l**` the argument immediatly after is the length of number per line (files only).
+**`l`** the argument immediatly after is the length of number per line (files only).
 
-`**v**` Normally dumps does its work silently. The v (verbose) option cause it to prints details about the output.
+**`v`** Normally dumps does its work silently. The v (verbose) option cause it to prints details about the output.
 
 
 In the letter(s) defining the base first letter is treated as the input base and if the letter immediatly after that defines a base then it is treated as the output base. If output base is not defined in case of numbers it prints the number in all the other basis, in case of file binary is choosen.
