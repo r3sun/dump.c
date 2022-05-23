@@ -34,7 +34,7 @@ p {
 <p class="heading">SYNOPISIS</p>
 
 	<div class="_sub">
-		<p><b>dump</b> -key [input]</p>
+		<p><b>dump</b> -[bihov] -[nf] <i>input</i> -[l] <i>length</i></p>
 	</div>
 
 <p class="heading">DESCRIPTION</p>
@@ -42,7 +42,7 @@ p {
 
 		<p>
 			<i>dump</i> takes an number as input and print the number in the specified numeral system.
-			The key is a string contains at most one function letter defining the immediate next argument
+			The arguments contains at most one function letter, defining the immediate next argument
 			plus letters that defines the base of input and output number.
 			Other arguments to the command are either input or a file containing the input.
 		</p>
@@ -50,7 +50,7 @@ p {
 		<p>The function letter is one of the following letters:</p>
 	
 		<div class="_sub">
-			<p><b>a</b>	<span class="_sub">the next argument is treated as the input</span></p>
+			<p><b>n</b>	<span class="_sub">the next argument is treated as the input</span></p>
 			<p><b>f</b>	<span class="_sub">the next argument is treated as the path of a file that contains the input</span></p>
 		</div>
 

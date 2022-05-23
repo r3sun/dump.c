@@ -61,11 +61,11 @@ int isvalid (int c, int base)
 /* prepare the number in s in a fancy way and put it in t */
 void prepnum (char *s, char *t, int obase)
 {
-	int bitgrp, i, l;
+	int bitgrp, bbitgrp, i, l;
 	char *p, sprtr;
 
 	switch(obase) {
-		case 2: bitgrp = 4; sprtr = ' '; break;
+		case 2: bitgrp = 4; bbitgrp = 8; sprtr = ' '; break;
 		case 8: bitgrp = 3; sprtr = ' '; break;
 		case 10: bitgrp = 3; sprtr = ','; break;
 		case 16: bitgrp = 4; sprtr = ' '; break;
@@ -73,7 +73,7 @@ void prepnum (char *s, char *t, int obase)
 	}
 	if (obase == 2) {
 		reverse (s);
-		while ((l = strlen(s)) && ( l %= bitgrp)) {
+		while ((l = strlen(s)) && ( l %= bbitgrp)) {
 			strcat(s, "0");
 		}
 		reverse (s);
@@ -82,8 +82,12 @@ void prepnum (char *s, char *t, int obase)
 
 	reverse (s);
 	while (*s != '\0') {
-		for (i = 0; i < bitgrp && *s != '\0'; i++) {
-			*p++ = *s++;
+		for (i = 0; i < bitgrp; i++) {
+			if (*s) {
+				*p++ = *s++;
+			} else {
+				*p++ = '0';
+			}
 		}
 		*p++ = sprtr;
 	}
@@ -122,6 +126,9 @@ void intobase (long long n, int base, char *buffer)
 	char *p;
 	p = buffer;
 
+	if (n == 0)
+		*buffer++ = '0';
+
 	for (n; n != 0; n /= base) {
 		*buffer++ = nuremals[(int)(n%base)];
 	}
@@ -129,226 +136,179 @@ void intobase (long long n, int base, char *buffer)
 	reverse (p);
 }
 
+void convert(long long n, int base, char *buffer)
+{
+	intobase (n, base, prpbuf);
+	prepnum (prpbuf, buffer, base);
+}
+
 
 int main (int argc, char *argv[])
 {
-	int c, aflag, fflag, cond, ibase, obase;
+	int c, i, l, nflag, fflag, vflag, cond, ibase, obase;
+	long long idata;
 	FILE *fp;
-	char *cp, *istr, *p, *numnm = (char *) malloc (sizeof(char) * 4);
-	long long idata = 0;
-	aflag = fflag = 0;
+	char *cp, *istr, *p;
+	char num_nm[][3] = {				/* prefixe of different numerals */
+						"", "", "bin", "",
+						"", "", "", "",
+						"oct", "", "int", "",
+						"", "", "", "",
+						"hex", NULL
+						};
 
-	/* determine the base of input number and output number  */
-	for (cp = *++argv; *cp; *cp++) {
-		switch(*cp) {
-			case '-':
-				break;
-			case 'b':
-				ibase = 2;
-				switch(*++cp) {
-					case 'i':
-						obase = 10;
-						numnm = "int";
-						break;
-					case 'h':
-						obase = 16;
-						numnm = "hex";
-						break;
-					case 'o':
-						obase = 8;
-						numnm = "oct";
-						break;
-					default:
-						obase = 0;
-						break;
-				}
-				break;
-			case 'i':
-				ibase = 10;
-				switch(*++cp) {
-					case 'b':
-						obase = 2;
-						numnm = "bin";
-						break;
-					case 'h':
-						obase = 16;
-						numnm = "hex";
-						break;
-					case 'o':
-						obase = 8;
-						numnm = "oct";
-						break;
-					default:
-						obase = 0;
-						break;
-				}
-				break;
-			case 'h':
-				ibase = 16;
-				switch(*++cp) {
-					case 'b':
-						obase = 2;
-						numnm = "bin";
-						break;
-					case 'i':
-						obase = 10;
-						numnm = "int";
-						break;
-					case 'o':
-						obase = 8;
-						numnm = "oct";
-						break;
-					default:
-						obase = 0;
-						break;
-				}
-				break;
-			case 'o':
-				ibase = 8;
-				switch(*++cp) {
-					case 'b':
-						obase = 2;
-						numnm = "bin";
-						break;
-					case 'i':
-						obase = 10;
-						numnm = "int";
-						break;
-					case 'h':
-						obase = 16;
-						numnm = "hex";
-						break;
-					default:
-						obase = 0;
-						break;
-				}
-				break;
-			case 'f':
-				fflag++;
-				istr = *++argv;
-				break;
-			case 'a':
-				aflag++;
-				istr = *++argv;
-				break;
-			default:
-				printf("dump: ");
+	int bases[] = {2, 8, 10, 16};
+	idata = 0;
+	i = nflag = fflag = vflag = ibase = obase = 0;
+	l = 8;
+
+	/* loop whrough argv */
+	while (*++argv) {
+		cp = *argv;
+		/* determine operation behaviour  */
+		while (*cp) {
+			switch(*cp) {
+				case '-':
+					break;
+				case 'b':
+					ibase = 2;
+					switch(*++cp) {
+						case 'i':
+							obase = 10;
+							break;
+						case 'h':
+							obase = 16;
+							break;
+						case 'o':
+							obase = 8;
+							break;
+						default:
+							cp--;
+							break;
+					}
+					break;
+				case 'i':
+					ibase = 10;
+					switch(*++cp) {
+						case 'b':
+							obase = 2;
+							break;
+						case 'h':
+							obase = 16;
+							break;
+						case 'o':
+							obase = 8;
+							break;
+						default:
+							cp--;
+							break;
+					}
+					break;
+				case 'h':
+					ibase = 16;
+					switch(*++cp) {
+						case 'b':
+							obase = 2;
+							break;
+						case 'i':
+							obase = 10;
+							break;
+						case 'o':
+							obase = 8;
+							break;
+						default:
+							cp--;
+							break;
+					}
+					break;
+				case 'o':
+					ibase = 8;
+					switch(*++cp) {
+						case 'b':
+							obase = 2;
+							break;
+						case 'i':
+							obase = 10;
+							break;
+						case 'h':
+							obase = 16;
+							break;
+						default:
+							cp--;
+							break;
+					}
+					break;
+				case 'f':				/* the next arg is the file that contains the input */
+					fflag++;
+					istr = *++argv;
+					break;
+				case 'l':				/* the length of number on each line */
+					l = chartoint (*++argv, 10);
+					break;
+				case 'n':				/* the next arg is the input number */
+					nflag++;
+					istr = *++argv;
+					break;
+				case 'v':				/* verbose */
+					vflag++;
+					break;
+				default:
+					printf("\ndump: \'%c\' is not a key\n", *cp);
+					break;
+			}
+			cp++;
 		}
 	}
 
-	if (aflag) {	/* the next argument is the input number */
+	if (nflag) {						/* the next argument is the input number */
 		idata = chartoint (istr, ibase);
-		if (ibase == 10) {
-			if (obase) {	/* if output base is defined only return the number on the defined base */
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("%s: %s\n", numnm, prpbuf);
-			} else {	/* else return the number on all possible bases */
-				obase = 2;	/* binary */
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("bin: %s\n", prpbuf);
-
-				obase = 8;	/* octal */
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("oct: %s\n", prpbuf);
-
-				obase = 16;	/* hexadecimal */
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("hex: %s\n", prpbuf);
-			}
-		} else if (ibase == 2) {
-			if (obase) {
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("%s: %s\n", numnm, prpbuf);
-			} else {
-				obase = 8;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("oct: %s\n", prpbuf);
-
-				obase = 10;	/* decimal */
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("int: %s\n", prpbuf);
-
-				obase = 16;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("hex: %s\n", prpbuf);
-			}
-		}else if (ibase == 8) {
-			if (obase) {
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("%s: %s\n", numnm, prpbuf);
-			} else {
-				obase = 2;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("bin: %s\n", prpbuf);
-
-				obase = 10;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("int: %s\n", prpbuf);
-
-				obase = 16;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("hex: %s\n", prpbuf);
-			}
-		} else if (ibase == 16) {
-			if (obase) {
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("%s: %s\n", numnm, prpbuf);
-			} else {
-				obase = 2;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("bin: %s\n", prpbuf);
-
-				obase = 8;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("oct: %s\n", prpbuf);
-
-				obase = 10;
-				intobase (idata, obase, buf);
-				prepnum (buf, prpbuf, obase);
-				printf ("int: %s\n", prpbuf);
-			}
-		} 
-	} else if (fflag) {	/* the next argument is a file containing input number */
-		fp = fopen (istr, "r");
-		if (fp != NULL) {
-			if (ibase == 10) {
-				if (obase == 2) {
-					while ((c = getc (fp)) != EOF) {
-						intobase (c, obase, buf);
-						prepnum (buf, prpbuf, obase);
-						printf ("%s ", prpbuf);
-					}
-				} else if (obase == 8) {
-					while ((c = getc (fp)) != EOF) {
-						intobase (c, obase, buf);
-						prepnum (buf, prpbuf, obase);
-						printf ("%s ", prpbuf);
-					}
-				} else if (obase == 16) {
-					while ((c = getc (fp)) != EOF) {
-						intobase (c, obase, buf);
-						prepnum (buf, prpbuf, obase);
-						printf ("%s ", prpbuf);
-					}
+		if (obase && ibase) {
+			convert (idata, obase, buf);
+			if(vflag)
+				printf ("%s: ", num_nm[obase]);
+			printf ("%s\n", buf);
+		} else if (ibase) {
+			for (i = 0; i <= 4; i++) {
+				obase = bases[i];
+				if (obase != ibase) {
+					convert (idata, obase, buf);
+					if(vflag)
+						printf ("%s: ", num_nm[obase]);
+					printf ("%s\n", buf);
 				}
 			}
 		} else {
+			printf ("dump: an input base is required\n");
+			return -1;
+		}
+	} else if (fflag) {					/* the next argument is a file containing input number */
+		fp = fopen (istr, "r");
+		if (fp != NULL) {
+			i = 0;
+			if (obase == 0)
+				obase = 2;
+			if (ibase == 10) {
+				while ((c = getc (fp)) != EOF) {
+					if ((i % l) == 0 && vflag) {
+						convert(i, 16, buf);
+						printf("\n%s\t", buf);
+					} else if ((i % l) == 0)
+						putchar ('\n');
+
+					convert (c, obase, buf);
+					printf ("%s ", buf);
+					i++;
+				}
+				if (vflag)
+					printf ("\n\nnumber of bytes read: %10d\t", i);
+			} else {
+				printf("dump: input base %d is not valid\n", ibase);
+				return -1;
+			}
+		} else {
 			printf ("dump: unable to open file %s", istr);
+			return -1;
 		}
 	}
+	return 0;
 }
