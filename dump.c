@@ -52,7 +52,7 @@ int isvalid (int c, int base)
 		default: break;
 	}
 	if ((cond = strchr (p, c)) == NULL) {
-		fprintf (stderr, "%c not a standard %d base symbole. It has been ignored\n", c, base);
+		fprintf (stderr, "dump: %c not a standard %d base symbole. It has been ignored\n", c, base);
 		return 0;
 	}
 	return 1;
@@ -304,7 +304,7 @@ int main (int argc, char *argv[])
 				if (vflag)
 					printf ("\n\nnumber of bytes read: %10d\t", i);
 			} else {
-				printf("dump: input base %d is not valid\n", ibase);
+				printf("dump: input base %d is not valid. consider using \'i\' for files.\n", ibase);
 				return -1;
 			}
 		} else {
