@@ -47,7 +47,7 @@ int isvalid (int c, int base)
 	switch(base) {
 		case 2: p = bins; break;
 		case 8: p = octs; break;
-		case 10: return 1; /* integers can be ASCII character so if integers always return 1 */
+		case 10: return 1; 							/* integers can be ASCII character so if integers always return 1 */
 		case 16: p = nuremals; break;
 		default: break;
 	}
@@ -117,7 +117,7 @@ int atobase (int c, int base)
 	if (base != 10) {
 		while (nuremals[i] != c) i++;
 		return i;
-	} else return c - '0';	/* if integer return the int value as they can be ASCII character */
+	} else return c - '0';							/* if integer return the int value as they can be ASCII character */
 }
 
 /* intobase: int n is converted into the the numeral system defined by base and put into buffer */
@@ -149,7 +149,7 @@ int main (int argc, char *argv[])
 	long long idata;
 	FILE *fp;
 	char *cp, *istr, *p;
-	char num_nm[][3] = {				/* prefixe of different numerals */
+	char num_nm[][3] = {							/* prefixe of different numerals */
 						"", "", "bin", "",
 						"", "", "", "",
 						"oct", "", "int", "",
@@ -157,7 +157,7 @@ int main (int argc, char *argv[])
 						"hex", NULL
 						};
 
-	int bases[] = {2, 8, 10, 16};
+	int bases[] = {2, 8, 10, 16};					/* list of all bases */
 	idata = 0;
 	i = nflag = fflag = vflag = ibase = obase = 0;
 	l = 8;
@@ -238,18 +238,18 @@ int main (int argc, char *argv[])
 							break;
 					}
 					break;
-				case 'f':				/* the next arg is the file that contains the input */
+				case 'f':							/* the next arg is the file that contains the input */
 					fflag++;
 					istr = *++argv;
 					break;
-				case 'l':				/* the length of number on each line */
+				case 'l':							/* the length of number on each line */
 					l = chartoint (*++argv, 10);
 					break;
-				case 'n':				/* the next arg is the input number */
+				case 'n':							/* the next arg is the input number */
 					nflag++;
 					istr = *++argv;
 					break;
-				case 'v':				/* verbose */
+				case 'v':							/* verbose */
 					vflag++;
 					break;
 				default:
@@ -260,17 +260,17 @@ int main (int argc, char *argv[])
 		}
 	}
 
-	if (nflag) {						/* the next argument is the input number */
+	if (nflag) {									/* the next argument is the input number */
 		idata = chartoint (istr, ibase);
-		if (obase && ibase) {
+		if (obase && ibase) {						/* do the convertion */
 			convert (idata, obase, buf);
 			if(vflag)
 				printf ("%s: ", num_nm[obase]);
 			printf ("%s\n", buf);
-		} else if (ibase) {
+		} else if (ibase) {							/* if only input base is given then convert the number in all other bases */
 			for (i = 0; i <= 4; i++) {
 				obase = bases[i];
-				if (obase != ibase) {
+				if (obase != ibase) {				/* ignore the input base */
 					convert (idata, obase, buf);
 					if(vflag)
 						printf ("%s: ", num_nm[obase]);
@@ -281,18 +281,18 @@ int main (int argc, char *argv[])
 			printf ("dump: an input base is required\n");
 			return -1;
 		}
-	} else if (fflag) {					/* the next argument is a file containing input number */
+	} else if (fflag) {								/* the next argument is a file containing input number */
 		fp = fopen (istr, "r");
 		if (fp != NULL) {
 			i = 0;
 
-			if (obase == 0)				/* no output base is given bin is default */
+			if (obase == 0)							/* no output base is given bin is default */
 				obase = 2;
 
 			if (ibase == 10) {
 				while ((c = getc (fp)) != EOF) {
-					if ((i % l) == 0 && vflag) {
-						convert(i, 16, buf);
+					if ((i % l) == 0 && vflag) {	/* to put a newline after the spcified length*/
+						convert(i, 16, buf);		/* number of byte read in hex */
 						printf("\n%s\t", buf);
 					} else if ((i % l) == 0)
 						putchar ('\n');
