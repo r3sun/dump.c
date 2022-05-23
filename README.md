@@ -60,7 +60,7 @@ To get the dump of a file containing of an ASCII or Unicode character just type 
 
 ## FILES
 
-[`./dump.c`](https://github.com/r3sun/dump.c/blob/main/dump.c)
+[./dump.c](https://github.com/r3sun/dump.c/blob/main/dump.c)
 
 ## DIAGNOSTICS
 
