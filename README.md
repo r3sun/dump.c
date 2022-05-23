@@ -28,21 +28,13 @@
 
 **`v`** Normally `dump` does its work silently. The **`v`** (verbose) option cause it to prints details about the output.
 
-**`v`** Normally dumps does its work silently. The v (verbose) option cause it to prints details about the output.
-
-
-
 In the letter(s) defining the base first letter is treated as the input base and if the letter immediatly after that defines a base then it is treated as the output base. If output base is not defined in case of numbers it prints the number in all the other basis, in case of file binary is choosen.
-
 
 **`n`** and **`f`** should not be used simultaneously. If used only the action of **`n`** will be done. In the same way none of the letters representing the base can not be repeted.
 
-**`n`** and **`f`** should not be used simultaneously. If used only the action of n will be done. In the same way none of the letters representing the base can not be repeted.
-
-
 ## EXAMPLES
 
-> `dump -ib -n 512`
+`dump -ib -n 512`
 
 here,
 
@@ -52,7 +44,7 @@ here,
 
 **`b`** tells that the number must be converted to binary.
 
-> `dump -ibv -f dump.c`
+`dump -ibv -f dump.c`
 
 here,
 
