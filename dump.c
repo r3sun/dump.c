@@ -285,8 +285,10 @@ int main (int argc, char *argv[])
 		fp = fopen (istr, "r");
 		if (fp != NULL) {
 			i = 0;
-			if (obase == 0)
+
+			if (obase == 0)				/* no output base is given bin is default */
 				obase = 2;
+
 			if (ibase == 10) {
 				while ((c = getc (fp)) != EOF) {
 					if ((i % l) == 0 && vflag) {

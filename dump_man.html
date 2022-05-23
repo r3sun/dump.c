@@ -12,13 +12,34 @@
 }
 body {
   margin: 2rem;
-}
-p {
   font-size: 1.2rem;
 }
+p {
+}
 .heading {
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 	font-weight: 600;
+}
+._c {
+	font: 400 1.2rem Courier;
+}
+._f_dtl {
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	width: -moz-fit-content;
+	width: fit-content;
+}
+._f_dtl ._f_l {
+	margin-right: 2rem;
+}
+._f_l {
+	font: 700 1.2rem Courier;
+	padding: 0 0.5rem;
+	min-width: 1rem;
+}
+._f_dscrp {
+
 }
 </style>
 </head>
@@ -28,69 +49,89 @@ p {
 <p class="heading">NAME</p>
 
 	<div class="_sub">
-		<p>dump -- convert between integers, binary, hexadecimals and octals</p>
+		<p><span class="_c">dump</span> -- convert between different numbers</p>
 	</div>
 
 <p class="heading">SYNOPISIS</p>
 
 	<div class="_sub">
-		<p><b>dump</b> -[bihov] -[nf] <i>input</i> -[l] <i>length</i></p>
+		<p><span class="_c">dump -[bihov] -[nf] <i>input</i> -[l] <i>length</i></span></p>
 	</div>
 
 <p class="heading">DESCRIPTION</p>
 	<div class="_sub">
 
 		<p>
-			<i>dump</i> takes an number as input and print the number in the specified numeral system.
-			The arguments contains at most one function letter, defining the immediate next argument
-			plus letters that defines the base of input and output number.
-			Other arguments to the command are either input or a file containing the input.
+			<span class="_c">dump</span>s file or argument in different numeral system as defined by
+			the first argument. The function letters defines:
 		</p>
 	
-		<p>The function letter is one of the following letters:</p>
-	
-		<div class="_sub">
-			<p><b>n</b>	<span class="_sub">the next argument is treated as the input</span></p>
-			<p><b>f</b>	<span class="_sub">the next argument is treated as the path of a file that contains the input</span></p>
+		<div class="_sub"><p class="_f_dtl"><span class="_f_l">b</span>		<span class="_f_dscrp">binary</span></p>
+			<p class="_f_dtl"><span class="_f_l">i</span>		<span class="_f_dscrp">integers</span></p>
+			<p class="_f_dtl"><span class="_f_l">h</span>		<span class="_f_dscrp">hexadecimals</span></p>
+			<p class="_f_dtl"><span class="_f_l">o</span>		<span class="_f_dscrp">octals</span></p>
+			<p class="_f_dtl"><span class="_f_l">n</span>		<span class="_f_dscrp">the argument immediatly after is treated as the input.</span></p>
+			<p class="_f_dtl"><span class="_f_l">f</span>		<span class="_f_dscrp">the argument immediatly after is treated as the path of a file that contains the input.</span></p>
+			<p class="_f_dtl"><span class="_f_l">l</span>		<span class="_f_dscrp">the argument immediatly after is the length of number per line (files only).</span></p>
+			<p class="_f_dtl"><span class="_f_l">v</span>		<span class="_f_dscrp">Normally <span class="_c">dumps</span> does its work silently. The v (verbose) option cause it to prints details about the output.</span></p>
 		</div>
 
-		<p>The following letters represent different base:</p>
+		<p>
+			In the letter(s) defining the base first letter is treated as the input base and
+			if the letter immediatly after that defines a base then it is treated as
+			the output base. If output base is not defined in case of numbers it prints
+			the number in all the other basis, in case of file binary is choosen.
+		</p>
 	
-		<div class="_sub">
-			<p><b>b</b>	<span class="_sub">binary</span></p>
-			<p><b>i</b>	<span class="_sub">integers</span></p>
-			<p><b>h</b>	<span class="_sub">hexadecimals</span></p>
-			<p><b>o</b>	<span class="_sub">octals</span></p>
-		</div>
-	
-		<p><b>a</b> and <b>f</b> can not be used simultaneously.
-			In the same way none of the letters representing the base can not be repeted.
+		<p>
+			<span class="_f_l">n</span> and <span class="_f_l">f</span> should not be used simultaneously.
+			If used only the action of <span class="_f_l">n</span> will be done. In the same way none of
+			the letters representing the base can not be repeted.
 		</p>
 	
 	</div>
 <p class="heading">EXAMPLES</p>
 	<div class="_sub">
-		<p>dump aib 512</p>
+		<p class="_c">dump -ib -n 512</p>
 		<div class="_sub">
 			<p>here,</p>
-			<p><b>a</b> <span class="_sub">tells that 512 is the input</span></p>
-			<p><b>i</b> <span class="_sub">tells that it is in integer base</span></p>
-			<p><b>b</b> <span class="_sub">tells that it must be converted to binary</span></p>
+			<p class="_f_dtl"><span class="_f_l">a</span>		<span class="_f_dscrp">tells that 512 is the input number.</span></p>
+			<p class="_f_dtl"><span class="_f_l">i</span>		<span class="_f_dscrp">tells that the number is in integer base.</span></p>
+			<p class="_f_dtl"><span class="_f_l">b</span>		<span class="_f_dscrp">tells that the number must be converted to binary.</span></p>
 		</div>
 
-		<p>dump fib dump.c.</p>
+		<p class="_c">dump -ibv -f dump.c</p>
 		<div class="_sub">
 			<p>here,</p>
-			<p><b>f</b> <span class="_sub">tells that dump.c is a file containing the input</span></p>
-			<p><b>i</b> <span class="_sub">tells that each character of the file is in integer base</span></p>
-			<p><b>b</b> <span class="_sub">tells that each character of the file must be converted to binary</span></p>
+			<p class="_f_dtl"><span class="_f_l">f</span>		<span class="_f_dscrp">tells that dump.c is a file containing the input.</span></p>
+			<p class="_f_dtl"><span class="_f_l">i</span>		<span class="_f_dscrp">tells that each character of the file is in integer base.</span></p>
+			<p class="_f_dtl"><span class="_f_l">b</span>		<span class="_f_dscrp">tells that each character of the file must be converted to binary.</span></p>
+			<p class="_f_dtl"><span class="_f_l">v</span>		<span class="_f_dscrp">tells that more details must be printed about the output.</span></p>
 		</div>
-		<p>to get the binary, hexadecimal and octal representation of an ASCII character just type ai in the <i>key</i> string. As ASCII characters are all valid integers in the range 0 to 256 so their binary, hexadecimal and octal representation is the same as that of the integers in that range.</p>
+		<p>
+			To get the dump of a file containing of an ASCII or Unicode character just type in
+			<span class="_f_l">i</span> as the input base. As ASCII or Unicode characters are all
+			valid integers so their binary, hexadecimal and octal representation
+			is the same as that of the integers.
+		</p>
 
 	</div>
+
+<p class="heading">FILES</p>
+	<div class="_sub">
+		<p class="_c">./dump.c</p>
+	</div>
+
+<p class="heading">DIAGNOSTICS</p>
+	<div class="_sub">
+		<p>Complaints about bad key characters and input number. Complaints if unable to open file.</p>
+	</div>
+
 <p class="heading">BUGS</p>
 	<div class="_sub">
-		<p>Inputing invalid number will print error following the input character. Characters to distinguish different base are invalid, <i>dump</i> will ignore them.</p>
+		<p>
+			There's no way to read the characters from a file, in base other than integers.
+		</p>
 	</div>
 </body>
 </html>
