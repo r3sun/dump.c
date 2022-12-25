@@ -66,3 +66,4 @@ iOSInjectionProject/
 *.exe
 *.obj
 *temp*
+*test*
