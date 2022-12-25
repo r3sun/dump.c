@@ -145,7 +145,7 @@ void convert(long long n, int base, char *buffer)
 
 int main (int argc, char *argv[])
 {
-	int c, i, l, nflag, fflag, vflag, cond, ibase, obase;
+	int c, c1, c2, c3, i, l, nflag, fflag, vflag, cond, ibase, obase;
 	long long idata;
 	FILE *fp;
 	char *cp, *istr, *p;
@@ -291,11 +291,12 @@ int main (int argc, char *argv[])
 
 			if (ibase == 10) {
 				while ((c = getc (fp)) != EOF) {
-					if ((i % l) == 0 && vflag) {	/* to put a newline after the spcified length*/
+					if (((i % l) == 0) && vflag) {	/* to put a newline after the spcified length*/
 						convert(i, 16, buf);		/* number of byte read in hex */
 						printf("\n%s\t", buf);
-					} else if ((i % l) == 0)
+					} else if ((i % l) == 0) {
 						putchar ('\n');
+					}
 
 					convert (c, obase, buf);
 					printf ("%s ", buf);
@@ -303,6 +304,37 @@ int main (int argc, char *argv[])
 				}
 				if (vflag)
 					printf ("\n\nnumber of bytes read: %10d\t", i);
+			} else if (ibase == 16) {
+				while ((c = getc (fp)) != EOF) {
+					if (c == '\\') {
+
+						buf[0] = c;
+						buf[1] = ((c1 = getc (fp)) != EOF) ? c1 : '\0';
+						buf[2] = ((c2 = getc (fp)) != EOF) ? c2 : '\0';
+						buf[3] = ((c3 = getc (fp)) != EOF) ? c3 : '\0';
+						buf[4] = '\0';
+
+						idata = chartoint (buf, ibase);
+
+						if (((i % l) == 0) && vflag && (obase != 10)) {	/* to put a newline after the spcified length*/
+							convert(i, 16, buf);		/* number of byte read in hex */
+							printf("\n%s\t", buf);
+						} else if (((i % l) == 0) && (obase != 10)) {
+							putchar ('\n');
+						}
+
+						if (obase != 10) {
+							convert (idatac, obase, buf);
+							printf ("%s ", buf);
+						} else {
+							printf ("%c", idata);
+						}
+						i++;
+					}
+				}
+				if (vflag)
+					printf ("\n\nnumber of bytes read: %10d\t", i);
+
 			} else {
 				printf("dump: input base %d is not valid. consider using \'i\' for files.\n", ibase);
 				return -1;

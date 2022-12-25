@@ -38,7 +38,7 @@ In the letter(s) defining the base first letter is treated as the input base and
 
 here,
 
-**`a`** tells that 512 is the input number.
+**`n`** tells that 512 is the input number.
 
 **`i`** tells that the number is in integer base.
 
