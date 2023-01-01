@@ -12,8 +12,9 @@
 	#define MAX_INT 0xffffffff
 #endif
 
+int vflag;
 char *bin, bytbuf[12], buf[PROCESSOR_SIZE + 1], prpbuf[81];
-const char nuremals[] = "0123456789ABCDEF";
+const char NUMERALS[] = "0123456789ABCDEF";
 
 /* revers s */
 void reverse(char *s)
@@ -48,11 +49,12 @@ int isvalid (int c, int base)
 		case 2: p = bins; break;
 		case 8: p = octs; break;
 		case 10: return 1; 							/* integers can be ASCII character so if integers always return 1 */
-		case 16: p = nuremals; break;
+		case 16: p = NUMERALS; break;
 		default: break;
 	}
 	if ((cond = strchr (p, c)) == NULL) {
-		fprintf (stderr, "dump: %c not a standard %d base symbole. It has been ignored\n", c, base);
+		if (vflag)
+			fprintf (stderr, "dump: %c not a standard %d base symbole. It has been ignored\n", c, base);
 		return 0;
 	}
 	return 1;
@@ -115,7 +117,7 @@ int atobase (int c, int base)
 	int i;
 	i = 0;
 	if (base != 10) {
-		while (nuremals[i] != c) i++;
+		while (NUMERALS[i] != c) i++;
 		return i;
 	} else return c - '0';							/* if integer return the int value as they can be ASCII character */
 }
@@ -130,7 +132,7 @@ void intobase (long long n, int base, char *buffer)
 		*buffer++ = '0';
 
 	for (n; n != 0; n /= base) {
-		*buffer++ = nuremals[(int)(n%base)];
+		*buffer++ = NUMERALS[(int)(n%base)];
 	}
 	*buffer = '\0';
 	reverse (p);
@@ -145,7 +147,7 @@ void convert(long long n, int base, char *buffer)
 
 int main (int argc, char *argv[])
 {
-	int c, c1, c2, c3, i, l, nflag, fflag, vflag, cond, ibase, obase;
+	int c, c1, c2, c3, i, l, nflag, fflag, cond, ibase, obase;
 	long long idata;
 	FILE *fp;
 	char *cp, *istr, *p;
@@ -324,10 +326,10 @@ int main (int argc, char *argv[])
 						}
 
 						if (obase != 10) {
-							convert (idatac, obase, buf);
+							convert (idata, obase, buf);
 							printf ("%s ", buf);
 						} else {
-							printf ("%c", idata);
+							printf ("%c", (char) idata);
 						}
 						i++;
 					}
